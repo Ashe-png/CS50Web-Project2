@@ -1,0 +1,99 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<div class="container shadow rounded bg-light mx-3">
+        {% if message2 %}
+        <div class="alert alert-success" role="alert">
+                {{ message2 }}
+        </div>
+        {% endif %}
+        {% if user.is_authenticated %}
+                {% if isOwner %}
+                        {% if listingItem.isActive %}
+                        <form action="{% url 'closeauction' listingItem.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger mt-2">Close Auction</button> 
+                        </form>
+                        {% elif not listingItem.isActive %}
+                        <form action="{% url 'openauction' listingItem.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success mt-2">Open Auction</button> 
+                        </form>
+                        {% endif %}
+                {% endif %}
+                {% if not isListingInWatchlist %}
+                        <form action="{% url 'addwatchers' listingItem.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success mt-2">Add to Watchlist</button> 
+                        </form>
+                {% else %}
+                        <form action="{% url 'removewatchers' listingItem.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-warning mt-2">Remove from Watchlist</button> 
+                        </form>
+                {% endif %}
+        {% endif %}
+                        
+        <div class="col-md-6 p-4">
+                <h2>{{ listingItem.title }}</h2>
+                <img src="{{ listingItem.imageUrl }}">
+
+
+                <h4>Price: ${{ listingItem.price }}</h4>
+                {% if listingItem.currentBid %}
+                <h6>Current Highest bid: ${{ listingItem.currentBid }}</h6>
+                {% endif %}
+                {% if userBid %}
+                        <h6>Your bid: ${{ userBid }}</h6>
+                {% endif %}
+                {% if message %}
+                        {% if not update %}
+                        <div class="alert alert-danger" role="alert">
+                                Bid Amount Invalid
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success" role="alert">
+                                Your Bid was placed successfully
+                        </div>
+                        {% endif %}
+                {% endif %}
+                {% if user.is_authenticated and listingItem.isActive %}
+                <form action="{% url 'addBid' listingItem.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="row mx-2">
+                                <h5 class="mt-1">Place Bid:</h5>
+                                <input type="number" class="form-control col-md-4 mx-2" name="offer">
+                                <input type="submit" class="btn btn-primary ">
+                        </div>
+
+                </form>
+                {% endif %}
+
+                <p class="h5">Description: {{ listingItem.description }}</p>
+                <hr>
+                <h5>Listed by: {{ listingItem.owner }}</h5>
+                <h5>Category: {{ listingItem.category }}</h5>
+            
+        </div>
+ </div>
+ <div class="container shadow rounded bg-light mx-3 mt-4">
+        <div class = "col-md-6 p-4">
+                <h2>Comments</h2>
+                {% if user.is_authenticated %}
+                        <form action="{% url 'addcomment' listingItem.id %}" method='POST'>
+                                {% csrf_token %}
+                                {{ commentform }}
+                                <input type="submit" class="btn btn-primary mt-2">
+                {% endif %}
+                <hr>
+                {% for comment in comments %}
+                        {{ comment.comment }}
+                        <p class="h6">Commented by {{ comment.author }} </p>
+                        <hr>
+                {% endfor %}
+        </div>
+ </div>
+
+
+
+{% endblock %}
