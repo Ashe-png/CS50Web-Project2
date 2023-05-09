@@ -12,6 +12,6 @@ python manage.py runserver
   
   ![image](https://user-images.githubusercontent.com/67725536/237047809-1f448012-a113-4069-950a-9a9b44d6fc64.png)  
     
-    ![image](https://user-images.githubusercontent.com/67725536/237048044-e0219d21-b5eb-40d4-a465-9573d13df7f1.png)
+   ![image](https://user-images.githubusercontent.com/67725536/237048044-e0219d21-b5eb-40d4-a465-9573d13df7f1.png)
 
 
